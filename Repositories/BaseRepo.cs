@@ -1,5 +1,6 @@
 ﻿using Contracts;
 using Entities;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -20,27 +21,25 @@ namespace Repositories
 
         public void Create(T entity)
         {
-            throw new NotImplementedException();
+            _repoContext.Set<T>().Add(entity);
         }
 
         public void Delete(T entity)
         {
-            throw new NotImplementedException();
+            _repoContext.Set<T>().Remove(entity);
         }
 
-        public IQueryable<T> FindAll(bool tracking)
-        {
-            throw new NotImplementedException();
-        }
+        public IQueryable<T> FindAll(bool tracking) => !tracking ?
+                                                        _repoContext.Set<T>().AsNoTracking()
+                                                        : _repoContext.Set<T>();
 
-        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool tracking)
-        {
-            throw new NotImplementedException();
-        }
+        public IQueryable<T> FindByCondition(Expression<Func<T, bool>> expression, bool tracking) => !tracking ?
+                                                       _repoContext.Set<T>().Where(expression).AsNoTracking()
+                                                       : _repoContext.Set<T>().Where(expression);
 
         public void Update(T entity)
         {
-            throw new NotImplementedException();
+            _repoContext.Set<T>().Update(entity);
         }
     }
 }
